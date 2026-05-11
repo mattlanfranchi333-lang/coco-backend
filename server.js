@@ -1,9 +1,6 @@
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import OpenAI from "openai";
-
-dotenv.config();
 
 const app = express();
 
@@ -22,8 +19,6 @@ app.post("/analyze", async (req, res) => {
   try {
 
     const { message } = req.body;
-
-    console.log("REQUEST RECEIVED");
 
     const completion =
       await openai.chat.completions.create({
@@ -45,7 +40,7 @@ app.post("/analyze", async (req, res) => {
 
       });
 
-    res.json({
+    res.status(200).json({
       reply:
         completion.choices[0].message.content
     });
@@ -54,21 +49,16 @@ app.post("/analyze", async (req, res) => {
 
   catch(error){
 
-    console.log("OPENAI ERROR:");
     console.log(error);
 
     res.status(500).json({
-      reply: "Server error"
+      reply: "Backend server error"
     });
 
   }
 
 });
 
-app.listen(3000, () => {
+/* IMPORTANT FOR VERCEL */
 
-  console.log(
-    "Server running on port 3000"
-  );
-
-});
+export default app;
